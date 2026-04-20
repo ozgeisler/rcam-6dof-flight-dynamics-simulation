@@ -1,14 +1,13 @@
 > This project is part of my self-driven journey toward flight dynamics, control, and GNC engineering.
 # ✈️ RCAM 6DOF Flight Dynamics Simulation & Validation
 
-## 📌 Overview
 This project implements a nonlinear **6 Degree-of-Freedom (6DOF) aircraft model** based on the Research Civil Aircraft Model (RCAM).
 
 The goal is to understand aircraft equations of motion (EOM), implement them in MATLAB, simulate the system in Simulink, and validate the results against reference datasets.
 
 ---
 
-## 🧠 Model Description
+##  Model Description
 
 The aircraft is modeled as a nonlinear system:
 
@@ -61,14 +60,14 @@ The model includes:
 
 ---
 
-### 🧪 Simulation Model
+### Simulation Model
 
 - `RCAM_MODEL_full.slx`  
   Simulink implementation of the 6DOF aircraft model
 
 ---
 
-## 🔄 Workflow
+##  Workflow
 
 1. Load recorded trajectory data  
 2. Extract state (X), input (U), and time (t)  
@@ -81,7 +80,7 @@ The model includes:
 
 ---
 
-## 📈 Results
+##  Results
 
 The project generates comparison plots for:
 
@@ -96,14 +95,14 @@ These results validate both the model and the simulation consistency.
 
 ---
 
-## 🛠️ Tools Used
+
 
 - MATLAB  
 - Simulink  
 
 ---
 
-## 🎯 Learning Focus
+
 
 This project is part of a self-driven study in:
 
@@ -113,8 +112,7 @@ This project is part of a self-driven study in:
 - MATLAB and Simulink integration  
 
 ---
-
-## 🚀 Future Work
+## Upcomings
 
 - Implement closed-loop control (e.g., pitch/attitude control)
 - Extend toward full GNC architecture
@@ -122,7 +120,7 @@ This project is part of a self-driven study in:
 
 ---
 
-## 💡 Key Takeaways
+
 
 - Aircraft dynamics are highly nonlinear and coupled  
 - Correct handling of states, frames, and time is critical  
