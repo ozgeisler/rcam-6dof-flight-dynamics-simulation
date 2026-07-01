@@ -195,22 +195,6 @@ The numerical and Simulink linearizations are compared to verify
 
 ---
 
-## Future Work
-
-Planned future developments include
-
-- Longitudinal and lateral-directional stability analysis
-- Aircraft mode identification (Short Period, Phugoid, Dutch Roll, Spiral and Roll modes)
-- Stability augmentation and flight control design
-- LQR and state-feedback controllers
-- Trajectory optimization
-- Integration with OpenMDAO
-- Gradient-based optimization
-- Aeroelastic model development
-- Aeroservoelastic load alleviation studies
-
----
-
 ## References
 
 - GARTEUR Research Civil Aircraft Model (RCAM)
