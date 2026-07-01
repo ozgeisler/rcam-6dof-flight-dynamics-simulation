@@ -1,130 +1,222 @@
-> This project is part of my self-driven journey toward flight dynamics, control, and GNC engineering.
-# ✈️ RCAM 6DOF Flight Dynamics Simulation & Validation
+# RCAM 6DOF Flight Dynamics Simulation
 
-This project implements a nonlinear **6 Degree-of-Freedom (6DOF) aircraft model** based on the Research Civil Aircraft Model (RCAM).
+A MATLAB implementation of the GARTEUR Research Civil Aircraft Model (RCAM) for nonlinear six-degree-of-freedom flight dynamics simulation, trim analysis, numerical linearization, and state-space model generation.
 
-The goal is to understand aircraft equations of motion (EOM), implement them in MATLAB, simulate the system in Simulink, and validate the results against reference datasets.
+The objective of this project is to develop a complete flight dynamics framework starting from the nonlinear equations of motion and progressing toward linear aircraft models that can later be used for flight control design, optimization, and multidisciplinary design optimization (MDO).
 
 ---
 
-##  Model Description
+## Features
 
-The aircraft is modeled as a nonlinear system:
+- Nonlinear six-degree-of-freedom rigid-body aircraft dynamics
+- Complete translational and rotational equations of motion
+- Aerodynamic force and moment model based on the GARTEUR RCAM benchmark
+- Gravity and propulsion force modeling
+- Straight-and-level trim computation using numerical optimization
+- Trim validation through nonlinear simulation
+- Numerical linearization using central finite differences
+- Linearization using MATLAB Simulink Linear Analysis Tool (`linmod`)
+- State-space model extraction about trimmed flight conditions
+- Comparison of numerical and Simulink linearization results
+- MATLAB implementation with validation scripts
 
-x_dot = f(x, u)
+---
 
-### State Vector (9 states)
-- u, v, w → translational velocities
-- p, q, r → angular rates
-- phi, theta, psi → Euler angles
+## Project Structure
 
-### Control Inputs (5 inputs)
-- Aileron (δA)
-- Elevator / Stabilizer (δT)
-- Rudder (δR)
-- Throttle 1 (δth1)
-- Throttle 2 (δth2)
+```
+source
+│
+├── RCAM_model.m
+├── RCAM_model_A.m
+├── RCAM_model_B.m
+├── RCAM_Model_C.m
+├── RCAM_Model_D.m
+├── RCAM_model_implicit.m
+│
+├── TrimRCAM.m
+├── cost_straight_level.m
+├── validateTrimPoint.m
+├── trim_values_straight_level.mat
+├── trim-plot.png
+│
+├── LinearizeSymmetricDifference.m
+├── ImplicitLinMod.m
+├── TrimControlSystemDesigner.slx
+├── Trimpointbylinearanalysistool.mat
+│
+├── compareresults.m
+├── Xdotvalues.mat
+├── XU_data.mat
+│
+├── Aerodynamic_Force_Coefficients.mat
+├── AerodynamicMoments.mat
+└── EngineForce_Moment_Gravitational.mat
+```
 
-The model includes:
-- Aerodynamic forces and moments
-- Engine (thrust) effects
+---
+
+## Methodology
+
+The development process follows a typical aircraft flight dynamics workflow.
+
+### 1. Nonlinear Aircraft Model
+
+The nonlinear six-degree-of-freedom equations of motion are implemented in MATLAB.
+
+The model includes
+
+- Translational dynamics
+- Rotational dynamics
+- Euler angle kinematics
+- Aerodynamic force model
+- Aerodynamic moment model
+- Engine thrust
 - Gravity forces
 
 ---
 
-## ⚙️ Project Structure
+### 2. Trim Analysis
 
-### Core MATLAB Functions
+A straight-and-level equilibrium flight condition is obtained by minimizing a nonlinear cost function.
 
-- `RCAM_model_A.m`  
-  Computes aerodynamic coefficients (CL, CD, CY)
+The trim solver computes
 
-- `RCAM_model_B.m`  
-  Computes aerodynamic moments about CG
+- Trim state variables
+- Trim control inputs
+- Equilibrium flight condition
 
-- `RCAM_Model_C.m`  
-  Computes engine forces, engine moments, and gravity
+The resulting trim point satisfies
 
-- `RCAM_Model_D.m`  
-  Computes full state derivatives (XDOT)
+\[
+\dot{x}\approx0
+\]
 
----
-
-### 📊 Data Files
-
-- `XU_data.mat` → reference state and input trajectories  
-- `Xdotvalues.mat` → reference state derivatives  
-- `Aerodynamic_Force_Coefficients.mat`  
-- `AerodynamicMoments.mat`  
-- `EngineForce_Moment_Gravitational.mat`  
+allowing the nonlinear aircraft model to remain in steady flight.
 
 ---
 
-### Simulation Model
+### 3. Trim Validation
 
-- `RCAM_MODEL_full.slx`  
-  Simulink implementation of the 6DOF aircraft model
+The computed trim condition is validated using nonlinear simulation.
 
----
+Validation includes
 
-##  Workflow
-
-1. Load recorded trajectory data  
-2. Extract state (X), input (U), and time (t)  
-3. Loop through each timestep:
-   - Compute aerodynamic coefficients
-   - Compute forces and moments
-   - Compute state derivatives (XDOT)  
-4. Run Simulink model  
-5. Compare MATLAB results with Simulink outputs and reference data  
+- State derivative verification
+- Equilibrium check
+- Time-history comparison
+- Straight-and-level flight verification
 
 ---
 
-##  Results
+### 4. Numerical Linearization
 
-The project generates comparison plots for:
+The nonlinear aircraft model is linearized numerically using the central finite difference method.
 
-- Aerodynamic coefficients (CL, CD, CY)
-- Aerodynamic moments (L, M, N)
-- Engine forces and moments
-- Gravity forces
-- State derivatives (XDOT)
-- Full state trajectories
+The Jacobian matrices are computed as
 
-These results validate both the model and the simulation consistency.
+\[
+A=\frac{\partial f}{\partial x}
+\]
 
----
+and
 
+\[
+B=\frac{\partial f}{\partial u}
+\]
 
-
-- MATLAB  
-- Simulink  
+using symmetric perturbations around the trim condition.
 
 ---
 
+### 5. MATLAB Linear Analysis
 
+A second linear model is obtained using MATLAB Simulink's Linear Analysis Tool (`linmod`).
 
-This project is part of a self-driven study in:
-
-- Flight dynamics  
-- Aircraft modeling (6DOF systems)  
-- Control systems (root locus, stability concepts)  
-- MATLAB and Simulink integration  
-
----
-## Upcomings
-
-- Implement closed-loop control (e.g., pitch/attitude control)
-- Extend toward full GNC architecture
-- Explore optimization-based methods (MDO)
+This provides an independent linearization that can be compared with the numerical implementation.
 
 ---
 
+### 6. Model Validation
 
+The numerical and Simulink linearizations are compared to verify
 
-- Aircraft dynamics are highly nonlinear and coupled  
-- Correct handling of states, frames, and time is critical  
-- MATLAB–Simulink consistency is essential for validation  
+- State-space matrices
+- Aircraft dynamics
+- Numerical accuracy
+- Linearization consistency
+
+---
+
+## Repository Contents
+
+### Aircraft Models
+
+- RCAM_model.m
+- RCAM_model_A.m
+- RCAM_model_B.m
+- RCAM_Model_C.m
+- RCAM_Model_D.m
+- RCAM_model_implicit.m
+
+---
+
+### Aerodynamic Data
+
+- Aerodynamic_Force_Coefficients.mat
+- AerodynamicMoments.mat
+- EngineForce_Moment_Gravitational.mat
+
+---
+
+### Trim
+
+- TrimRCAM.m
+- cost_straight_level.m
+- validateTrimPoint.m
+- trim_values_straight_level.mat
+
+---
+
+### Linearization
+
+- LinearizeSymmetricDifference.m
+- ImplicitLinMod.m
+- TrimControlSystemDesigner.slx
+- Trimpointbylinearanalysistool.mat
+
+---
+
+### Validation
+
+- compareresults.m
+- Xdotvalues.mat
+- XU_data.mat
+
+---
+
+## Future Work
+
+Planned future developments include
+
+- Longitudinal and lateral-directional stability analysis
+- Aircraft mode identification (Short Period, Phugoid, Dutch Roll, Spiral and Roll modes)
+- Stability augmentation and flight control design
+- LQR and state-feedback controllers
+- Trajectory optimization
+- Integration with OpenMDAO
+- Gradient-based optimization
+- Aeroelastic model development
+- Aeroservoelastic load alleviation studies
+
+---
+
+## References
+
+- GARTEUR Research Civil Aircraft Model (RCAM)
+- Stevens & Lewis — Aircraft Control and Simulation
+- Nelson — Flight Stability and Automatic Control
+- MATLAB & Simulink Documentation
 
 ---
 
